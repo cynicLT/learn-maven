@@ -20,7 +20,7 @@ public class SampleController {
   public int echo(@PathVariable String text) {
     LOGGER.info("response", text);
 
-    String result = sampleService.process(text);
+    String result = text == "banana" ? sampleService.process(text) : "cacosa";
     LOGGER.info("result is " + result);
 
     return result.length();
