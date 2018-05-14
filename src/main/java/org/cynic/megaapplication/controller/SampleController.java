@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -14,7 +16,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 @RestController
 public class SampleController {
@@ -61,5 +66,26 @@ public class SampleController {
   public String hashString(@PathVariable("text") String text) {
 
     return new String(DigestUtils.getMd5Digest().digest(text.getBytes()));
+  }
+
+  @RequestMapping("/validate")
+  public boolean valdiate(@RequestParam String text) {
+    Pattern pattern = Pattern.compile("^(a+)+$");
+
+    Matcher matcher = pattern.matcher(text);
+
+    return matcher.matches();
+  }
+
+  @RequestMapping("/forward/{url}")
+  public String router(@PathVariable("url") String url) {
+
+    return "redirect:" + url;
+  }
+
+  @GetMapping("/serve-file/{file}")
+  public File serveFile(@PathVariable("file") String file) {
+
+    return new File(file);
   }
 }
