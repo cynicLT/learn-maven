@@ -25,4 +25,13 @@ public class SampleService {
       return null;
     }
   }
+
+  public String processFile(String fileName) throws URISyntaxException, IOException {
+    URL url = getClass().getClassLoader().getResource(fileName);
+    File file = new File(url.toURI());
+    FileReader fileReader = new FileReader(file);
+    char[] data = new char[1000];
+    fileReader.read(data);
+    return new String(data);
+  }
 }

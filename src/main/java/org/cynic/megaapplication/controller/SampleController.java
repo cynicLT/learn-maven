@@ -1,5 +1,13 @@
 package org.cynic.megaapplication.controller;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.Random;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.cynic.megaapplication.service.SampleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,5 +32,34 @@ public class SampleController {
     LOGGER.info("result is " + result);
 
     return result.length();
+  }
+
+
+  @GetMapping("/sample")
+  public String sample(HttpSession httpSession) throws URISyntaxException {
+    URL url = getClass().getClassLoader().getResource("application.properties");
+    httpSession.setAttribute("file", new File(url.toURI()));
+
+    return new String("OK");
+  }
+
+  @GetMapping("/randomizer")
+  public Long randomizer(HttpServletRequest httpServletRequest) {
+    String query = httpServletRequest.getQueryString();
+    LOGGER.info("processed Query: " + query);
+    return new Random().nextLong();
+  }
+
+  @GetMapping("/echo-dynamic/{fileName}")
+  public String echoDynamic(@PathVariable String fileName) throws IOException, URISyntaxException {
+
+    return sampleService.processFile(fileName);
+  }
+
+
+  @GetMapping("/hash/{text}")
+  public String hashString(@PathVariable("text") String text) {
+
+    return new String(DigestUtils.getMd5Digest().digest(text.getBytes()));
   }
 }
