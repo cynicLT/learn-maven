@@ -8,7 +8,7 @@ import java.net.URL;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SampleService {
+public final class SampleService extends SomeService {
 
   public String process(String text) {
     URL url = getClass().getClassLoader().getResource("application.properties");
@@ -26,12 +26,4 @@ public class SampleService {
     }
   }
 
-  public String processFile(String fileName) throws URISyntaxException, IOException {
-    URL url = getClass().getClassLoader().getResource(fileName);
-    File file = new File(url.toURI());
-    FileReader fileReader = new FileReader(file);
-    char[] data = new char[1000];
-    fileReader.read(data);
-    return new String(data);
-  }
 }
